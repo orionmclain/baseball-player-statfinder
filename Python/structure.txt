@@ -1,0 +1,61 @@
+    
+    
+    STRUCTURE:
+
+1. Players are searched by name by the user
+2. Their playerid is then found by finding their name in the players list
+    - If only the last name of the player is searched, find the player's full name to be displayed
+3. (Incomplete) Player position is determined from their profile, determining hitter/pitcher
+4. Recent game statistics are pulled from the players game log
+    -  Last 30 games for hitters, as possible 
+    -  Last 15 appearances for pitchers, as possible 
+5. Season statistics are pulled for the player
+6. Career statistics are pulled for the player from career page on baseball-reference
+6. Player splits are pulled from the season splits page
+7. All player statistics are shown in the GUI
+    - Displays last 5 games statlines, last 10, 20, 30 game summary stats, career stats & splits
+
+    
+   
+    STATISTICS:
+
+PITCHER
+    Last 5 Games: 
+        - Date, Opponent, Result, Decision, IP, H, R, ER, BB, SO, HR, HBP, ERA, Pitches, Strikes
+
+    Summary of last 5, 10, and 15 appearances:
+        - W, L, IP, H, R, ER, BB, SO, HR, HBP, ERA, Strike %
+
+    Season stats:
+        - W, L, IP, H, R, ER, BB, SO, HR, HBP, ERA, Strike %
+    
+    Career stats:
+        - W, L, IP, H, R, ER, BB, SO, HR, HBP, ERA, Strikeout/Walk %, Opp BAA, SLG, OPS
+
+    Career splits:
+        Home/Away - W, L, IP, H, R, ER, BB, SO, HR, HBP, ERA, Strikeout/Walk
+
+HITTER:
+    Last 5 Games: 
+        - Date, Opponent, Result, AB, R, H, 2B, 3B, HR, RBI, SB, CS, BB, SO, BAA, OBP, SLG, OPS
+        
+    Summary of last 10, 20, 30 games: 
+        - AB, R, H, 2B, 3B, HR, RBI, SB, CS, BB, SO, BAA, OBP, SLG, OPS
+
+    Season stats:    
+        - AB, R, H, 2B, 3B, HR, RBI, SB, CS, BB, SO, BAA, OBP, SLG, OPS, WAR
+
+    Career stats:
+        - AB, R, H, 2B, 3B, HR, RBI, SB, CS, BB, SO, BAA, OBP, SLG, OPS, WAR
+
+    Season Splits:
+        vs RHP/LHP - AB, H, HR, RBI, SB, BB, SO, BAA, OBP, SLG, OPS 
+        Home/Away - AB, H, HR, RBI, SB, BB, SO, BAA, OBP, SLG, OPS
+        Batting order position - AB, H, HR, RBI, SB, BB, SO, BAA, OBP, SLG, OPS
+
+
+
+player name entered
+player position identified
+player statistics pulled
+GUI updates
