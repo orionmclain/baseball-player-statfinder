@@ -5,7 +5,7 @@
 1. Players are searched by name by the user
 2. Their playerid is then found by finding their name in the players list
     - If only the last name of the player is searched, find the player's full name to be displayed
-3. (Incomplete) Player position is determined from their profile, determining hitter/pitcher
+3. Player position is determined from their profile, determining hitter/pitcher
 4. Recent game statistics are pulled from the players game log
     -  Last 30 games for hitters, as possible 
     -  Last 15 appearances for pitchers, as possible 
