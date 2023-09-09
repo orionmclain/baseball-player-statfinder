@@ -440,10 +440,9 @@ class AnalysisWindow(QWidget):         # Overall Analysis of baseball
 
 
 
-
-
 app = QApplication(sys.argv)
 window = MainWindow()
+
 
 app.setStyleSheet(""" 
     QWidget {
