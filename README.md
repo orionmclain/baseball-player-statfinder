@@ -1,4 +1,4 @@
-# baseball-player-statfinder
+# Baseball Player Statfinder
 Python GUI using PyQt6 with player search for season statistics (data from baseball-reference.com)
 
 1. Search a player in the search bar (must have played in 2023 -- will work to incorporate career statistics)
