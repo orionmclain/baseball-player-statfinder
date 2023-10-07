@@ -8,7 +8,7 @@ import sys
 from playerScraper import find_player_id, get_player_full_name, scrape_hitter_stats, scrape_pitcher_stats
 
 ### Visualization Importst
-from PyQt6.QtWidgets import QMainWindow, QTabWidget, QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QScrollArea
+from PyQt6.QtWidgets import QMainWindow, QTabWidget, QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QScrollArea, QHeaderView
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt
 
@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("MLB Player Stat Application")
 
         self.tab_widget = QTabWidget()
-        self.resize(800,800)
+        self.resize(802,800)
         # Create and add the first tab (Player Stats)
         player_stats_tab = PlayerStatsWindow()
         self.tab_widget.addTab(player_stats_tab, "Player Lookup")
@@ -40,8 +40,9 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
         self.setLayout(self.layout)
         top_layout = QHBoxLayout()
 
-        self.label1 = QLabel("Search an MLB Player")
-        top_layout.addWidget(self.label1, alignment=Qt.AlignmentFlag.AlignTop)  # Align to the top)
+        self.searchLabel = QLabel("Search an MLB Player:")
+        self.searchLabel.setProperty("class", "searchLabel")
+        top_layout.addWidget(self.searchLabel, alignment=Qt.AlignmentFlag.AlignTop)  # Align to the top)
 
         self.playerSearch = QLineEdit()
         self.playerSearch.returnPressed.connect(self.displayPlayerStats)
@@ -81,6 +82,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
         fullName = get_player_full_name(playerID)
         playerTitle = QLabel(fullName + " Stats: " + positions)
         playerTitle.setFont(QFont('Arial', 20))
+        playerTitle.setProperty("class", "title")
         playerTitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.statistics_layout.addWidget(playerTitle, 0, 0)
 
@@ -92,14 +94,9 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             gameStats = playerStats['game_stats']
         
             self.recents = QTableWidget(10, 16)
-            self.recents.setHorizontalHeaderLabels(['Date', 'Opp', 'Results', 'AB', 'H', 'BB', 'K', 'R', 'RBI', 'HR', 'SB', 'CS', 'BAA', 'OBP', 'SLG', 'OPS'])
+            self.recents.setHorizontalHeaderLabels(['Date', 'Opp', 'Result', 'AB', 'H', 'BB', 'K', 'R', 'RBI', 'HR', 'SB', 'CS', 'BAA', 'OBP', 'SLG', 'OPS'])
             self.recents.verticalHeader().setVisible(False)
-
-             # Set column widths using a loop
-            column_widths = [70, 44, 58, 20, 20, 20, 20, 20, 20, 20, 20, 20, 30, 30, 30, 35]  # Adjust these values as needed
-            
-            for col, width in enumerate(column_widths):
-                self.recents.setColumnWidth(col, width)
+            self.recents.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
 
             for i, game_stat in enumerate(gameStats):
@@ -123,12 +120,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             self.last10stats = QTableWidget(1, 10)
             self.last10stats.setHorizontalHeaderLabels(['AB', 'H', 'BB', 'K', 'R', 'RBI', 'HR', 'SB', 'CS', 'BAA'])
             self.last10stats.verticalHeader().setVisible(False)
-
-             # Set column widths using a loop
-            column_widths2 = [70, 70, 69, 69, 69, 69, 70, 70, 70, 70]  # Adjust these values as needed
-            
-            for col, width in enumerate(column_widths2):
-                self.last10stats.setColumnWidth(col, width)
+            self.last10stats.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
 
             row10 = [
@@ -149,10 +141,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             self.last20stats = QTableWidget(1, 10)
             self.last20stats.setHorizontalHeaderLabels(['AB', 'H', 'BB', 'K', 'R', 'RBI', 'HR', 'SB', 'CS', 'BAA'])
             self.last20stats.verticalHeader().setVisible(False)
-
-            
-            for col, width in enumerate(column_widths2):
-                self.last20stats.setColumnWidth(col, width)
+            self.last20stats.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
             row20 = [
                 last20['AB'], last20['H'], last20['BB'], last20['K'],
@@ -173,10 +162,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             self.last30stats = QTableWidget(1, 10)
             self.last30stats.setHorizontalHeaderLabels(['AB', 'H', 'BB', 'K', 'R', 'RBI', 'HR', 'SB', 'CS', 'BAA'])
             self.last30stats.verticalHeader().setVisible(False)
-
-            
-            for col, width in enumerate(column_widths2):
-                self.last30stats.setColumnWidth(col, width)
+            self.last30stats.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
             row30 = [
                 last30['AB'], last30['H'], last30['BB'], last30['K'],
@@ -194,13 +180,8 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             self.seasonS = QTableWidget(1, 10)
             self.seasonS.setHorizontalHeaderLabels(['AB','H','BB','K','R','RBI','HR','SB','CS','BAA','OBP','SLG','OPS'])
             self.seasonS.verticalHeader().setVisible(False)
+            self.seasonS.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
-            
-            # Set column widths using a loop
-            column_widths3 = [70, 70, 69, 69, 69, 69, 70, 70, 70, 70]  # Adjust these values as needed
-
-            for col, width in enumerate(column_widths3):
-                self.seasonS.setColumnWidth(col, width)
 
             rowS = [
                 season['AB'], season['H'], season['BB'], season['K'],
@@ -218,12 +199,14 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
 
             # Add title to distinguish hitting statistics
             self.hitter_title = QLabel("Hitting Statistics")
+            self.hitter_title.setProperty("class", "title")
             self.hitter_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.hitter_title.setFont(QFont('Arial', 16))
             self.statistics_layout.addWidget(self.hitter_title, 1, 0)
 
             # Add title label for recent games
             recent_title = QLabel("Recent Games")
+            recent_title.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(recent_title, 2, 0)
 
             self.statistics_layout.addWidget(self.recents, 3, 0)
@@ -231,18 +214,21 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
 
             # Add title label for last 10 games
             last10_title = QLabel("Last 10 Games Totals")
+            last10_title.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(last10_title, 4, 0,)
 
             self.statistics_layout.addWidget(self.last10stats, 5, 0)
 
             # Add title label for last 20 games
             last20_title = QLabel("Last 20 Games Totals")
+            last20_title.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(last20_title, 6, 0)
 
             self.statistics_layout.addWidget(self.last20stats, 7, 0)
 
             # Add title label for last 30 games
             last30_title = QLabel("Last 30 Games Totals")
+            last30_title.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(last30_title, 8, 0)
 
             self.statistics_layout.addWidget(self.last30stats, 9, 0)
@@ -250,6 +236,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             
             # Add title label season
             season_title = QLabel("Season Totals")
+            season_title.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(season_title, 10, 0)
 
             self.statistics_layout.addWidget(self.seasonS, 11, 0,)
@@ -263,15 +250,10 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             gameStatsP = playerStatsP['game_stats']
         
             self.recentsP = QTableWidget(10, 15)
-            self.recentsP.setHorizontalHeaderLabels(['Date', 'Opp', 'Results', 'Dec', 'IP', 'H', 'R', 'ER', 'BB', 'SO', 'HR', 'HBP', 'ERA', 'Pitches', 'Strikes'])
+            self.recentsP.setHorizontalHeaderLabels(['Date', 'Opp', 'Result', 'Dec', 'IP', 'H', 'R', 'ER', 'BB', 'SO', 'HR', 'HBP', 'ERA', 'Pitches', 'Strikes'])
             self.recentsP.verticalHeader().setVisible(False)
-
-             # Set column widths using a loop
-            column_widthsP = [60, 45, 65, 65, 30, 25, 25, 25, 25, 25, 30, 35, 35, 47, 47]  # Adjust these values as needed
+            self.recentsP.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
             
-            for col, width in enumerate(column_widthsP):
-                self.recentsP.setColumnWidth(col, width)
-
 
             for i, game_stat in enumerate(gameStatsP):
                 row = [
@@ -295,12 +277,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             self.last5stats = QTableWidget(1, 12)
             self.last5stats.setHorizontalHeaderLabels(['IP', 'R', 'ER', 'BB', 'SO', 'H', 'HR', 'HBP', 'ERA', 'WHIP', 'Pitches', 'Strikes'])
             self.last5stats.verticalHeader().setVisible(False)
-
-            # Set column widths using a loop
-            column_widthsP2 = [58]*len(last5)  # Adjust these values as needed
-
-            for col, width in enumerate(column_widthsP2):
-                self.last5stats.setColumnWidth(col, width)
+            self.last5stats.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
             row5 = [
                 last5['IP'], last5['R'], last5['ER'], last5['BB'],
@@ -319,10 +296,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             self.last10statsP = QTableWidget(1, 12)
             self.last10statsP.setHorizontalHeaderLabels(['IP', 'R', 'ER', 'BB', 'SO', 'H', 'HR', 'HBP', 'ERA', 'WHIP', 'Pitches', 'Strikes'])
             self.last10statsP.verticalHeader().setVisible(False)
-
-            
-            for col, width in enumerate(column_widthsP2):
-                self.last10statsP.setColumnWidth(col, width)
+            self.last10statsP.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
 
             row10P = [
@@ -343,10 +317,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             self.last15stats = QTableWidget(1, 12)
             self.last15stats.setHorizontalHeaderLabels(['IP', 'R', 'ER', 'BB', 'SO', 'H', 'HR', 'HBP', 'ERA', 'WHIP', 'Pitches', 'Strikes'])
             self.last15stats.verticalHeader().setVisible(False)
-
-            
-            for col, width in enumerate(column_widthsP2):
-                self.last15stats.setColumnWidth(col, width)
+            self.last15stats.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
             row15 = [
                 last15['IP'], last15['R'], last15['ER'], last15['BB'],
@@ -366,13 +337,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             self.seasonSP = QTableWidget(1, 13)
             self.seasonSP.setHorizontalHeaderLabels(['W/L','IP','R','ER','BB','SO','H','HR','HBP','ERA','WHIP','Strike %','Opp BAA'])
             self.seasonSP.verticalHeader().setVisible(False)
-
-            
-            # Set column widths using a loop
-            column_widths3 = [65, 50, 50, 50, 50, 50, 50, 50, 50, 51, 51, 65, 65]  # Adjust these values as needed
-
-            for col, width in enumerate(column_widths3):
-                self.seasonSP.setColumnWidth(col, width)
+            self.seasonSP.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
             rowSP = [
                 seasonP['W/L'], seasonP['IP'], seasonP['R'], seasonP['ER'],
@@ -390,12 +355,14 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
 
             # Add title to distinguish pitching statistics
             self.pitcher_title = QLabel("Pitching Statistics")
+            self.pitcher_title.setProperty("class", "title")
             self.pitcher_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.pitcher_title.setFont(QFont('Arial', 16))
             self.statistics_layout.addWidget(self.pitcher_title, 12, 0)
 
             # Add title label for recent games
             recent_titleP = QLabel("Recent Games")
+            recent_titleP.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(recent_titleP, 13, 0)
 
             self.statistics_layout.addWidget(self.recentsP, 14, 0)
@@ -404,6 +371,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             
             # Add title label for last 5 games
             last5_titleP = QLabel("Last 5 Games Totals")
+            last5_titleP.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(last5_titleP, 15, 0)
 
             self.statistics_layout.addWidget(self.last5stats, 16, 0)
@@ -411,14 +379,15 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             
             # Add title label for last 10 games
             last10_titleP = QLabel("Last 10 Games Totals")
+            last10_titleP.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(last10_titleP, 17, 0,)
 
             self.statistics_layout.addWidget(self.last10statsP, 18, 0)
-
             
 
             # Add title label for last 30 games
             last15_title = QLabel("Last 15 Games Totals")
+            last15_title.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(last15_title, 20, 0)
 
             self.statistics_layout.addWidget(self.last15stats, 21, 0)
@@ -426,6 +395,7 @@ class PlayerStatsWindow(QWidget):      # Player Lookup for Recent + Season Stats
             
             # Add title label season
             season_titleP = QLabel("Season Totals")
+            season_titleP.setProperty("class", "statLabel")
             self.statistics_layout.addWidget(season_titleP, 23, 0)
 
             self.statistics_layout.addWidget(self.seasonSP, 24, 0,)
@@ -445,22 +415,60 @@ window = MainWindow()
 
 
 app.setStyleSheet(""" 
-    QWidget {
-                  background-color: 
-    }              
+     QTabWidget {
+                  background-color: #737bdc;
+                  
+    }
+                  
+    QLabel {
+                  color: #000;
+                  
+    }
+                  
+    .statLabel {
+                  font-weight: bold;
+    }
     
+    .title {
+                  font-weight: bold;
+    }
+                  
+    QHeaderView::section{
+                  background-color: lightblue;
+                  font-weight: bold;
+    }
+    QTableWidget {
+                  border-style: solid;
+                  border: 1.5px solid black;    
+    }
+                  
     QPushButton {
                   font-size: 12px;
                   background-color: "lightblue";
     }
     
     QPushButton:hover {
-                  background: #0b7dda
+                  background: #0b7dda;
     }
                   
-    QLineEdit {
-                  background-color: 
+    QPushButton:focus {
+                  background-color: "darkblue";
+                  color: "white";
     }
+
+    QLineEdit {
+                  background-color: white;
+                  border-style: solid;
+                  border: 1px solid black;
+                  
+    }
+
+    QLineEdit:focus {
+                  background-color: "lightgrey";
+    }
+                  
+    
+    
                   
 """)
 

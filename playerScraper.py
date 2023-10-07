@@ -18,14 +18,14 @@ def scrape_pitcher_stats(player_id):
     pitcher_stats = []
     game_stats = {}
     pitching_gamelogs = soup.find_all('tr', id=lambda value: value and value.startswith('pitching_gamelogs.'))
-    print(pitching_gamelogs[0])
+    #print(pitching_gamelogs[0])
 
     for i in range(len(pitching_gamelogs)):
         if i <= 15:  # Adjust the number of games as per your requirement
             
             game_stats = {
                 'Date': pitching_gamelogs[-1-i].find('td', {'data-stat': 'date_game'}).get_text().replace('\xa0', ' '),
-                'Opponent': pitching_gamelogs[-1-i].find('td', {'data-stat': 'team_ID'}).get_text(),
+                'Opponent': pitching_gamelogs[-1-i].find('td', {'data-stat': 'opp_ID'}).get_text(),
                 'Result': pitching_gamelogs[-1-i].find('td', {'data-stat': 'game_result'}).get_text(),
                 'Decision': pitching_gamelogs[-1-i].find('td', {'data-stat': 'player_game_result'}).get_text(),
                 'IP': pitching_gamelogs[-1-i].find('td', {'data-stat': 'IP'}).get_text(),
@@ -40,7 +40,7 @@ def scrape_pitcher_stats(player_id):
                 'Pitches': pitching_gamelogs[-1-i].find('td', {'data-stat': 'pitches'}).get_text(),
                 'Strikes': pitching_gamelogs[-1-i].find('td', {'data-stat': 'strikes_total'}).get_text(),
             }
-            print(game_stats)
+            #print(game_stats)
             pitcher_stats.append(game_stats)
 
     game_stats = list(game_stats)  # Convert tuple to list\
@@ -75,7 +75,7 @@ def scrape_pitcher_stats(player_id):
 
 def calculate_pitcher_stats(pitcher_stats):
     total_stats = {
-        'IP': 0.0,
+        'IP': Decimal(0.0),
         'R': 0,
         'ER': 0,
         'BB': 0,
@@ -95,7 +95,7 @@ def calculate_pitcher_stats(pitcher_stats):
                 value = str(stats.get(key, '0'))
                 if value:
                     try:
-                        total_stats[key] += '{:.1f}'.format(Decimal(value))
+                        total_stats[key] += Decimal(value)
                     except Exception as e:
                         print(f"Error converting '{value}' to Decimal: {e}")
 
@@ -103,14 +103,20 @@ def calculate_pitcher_stats(pitcher_stats):
                 continue
             else:
                 total_stats[key] += int(stats.get(key, 0))
+    
+    
 
     if total_stats['IP'] > 0:
         total_stats['WHIP'] = (total_stats['H'] + total_stats['BB'])/ total_stats['IP']
         total_stats['WHIP'] = Decimal(total_stats['WHIP']).quantize(Decimal('.00'), rounding=ROUND_HALF_UP)
 
-        total_stats['ERA'] = total_stats['ER']/total_stats['IP']
-        total_stats['ERA'] = total_stats['ERA'].quantize(Decimal('.000'), rounding=ROUND_HALF_UP)
-
+        total_stats['ERA'] = (total_stats['ER']/total_stats['IP'])*9
+        total_stats['ERA'] = total_stats['ERA'].quantize(Decimal('.00'), rounding=ROUND_HALF_UP)
+    
+    total_stats['IP'] = "{:.1f}".format(total_stats['IP'])
+    total_stats['WHIP'] = "{:.2f}".format(total_stats['WHIP'])
+    total_stats['ERA'] = "{:.2f}".format(total_stats['ERA'])
+    
     return total_stats
 
 
